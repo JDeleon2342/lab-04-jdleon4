@@ -58,7 +58,7 @@ def sgd(X, y, alpha=0.1, epochs=750, decay=0.99, random_state=None):
     for _ in range(epochs):
         # Create a random ordering so that every observation is used once.
         # TODO: replace this placeholder with the ordering you will iterate over.
-        observation_order = []
+        observation_order = rng.permutation(n)
 
         for index in observation_order:
             # TODO: Select one row from X and its matching target value from y.
@@ -66,7 +66,18 @@ def sgd(X, y, alpha=0.1, epochs=750, decay=0.99, random_state=None):
             # TODO: Compute the squared-error gradient for this observation.
             #       Check that its shape matches `betas` before updating betas.
             # TODO: Update betas using the current learning rate, alpha.
-            pass
+            
+            X_row = X[index]
+            y_target = y[index]
+
+            prediction = np.dot(X_row, betas)
+            residual = y_target - prediction
+
+            square_error_gradient = -2 * residual * X_row
+            square_error_gradient = square_error_gradient.reshape(p, 1)
+        
+            betas = betas - alpha*square_error_gradient
+
 
         # Decay after the epoch, not after each individual observation.
         alpha *= decay
